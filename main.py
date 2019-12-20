@@ -14,17 +14,19 @@ def mse_loss(y_true, y_pred):
   return ((y_true - y_pred) ** 2).mean()
   
 class Neuron:
-  def __init__(self, input):
-    self.input = input
+  def __init__(self, inputSize):
+    self.inputSize = inputSize
     self.weights = []
-    self.bias = np.random.normal()
+    self.bias = 0 #np.random.normal()
 
-    for i in range (0, len(input)):
-      self.weights.append(np.random.normal())
+
+    for i in range (0, inputSize):
+      self.weights.append(1)#np.random.normal())
 
   # Return dot product of inputs and weights
-  def feedforward(self):
-    self.output = np.dot(self.input, self.weights) + self.bias
+  def feedforward(self, input):
+    self.output = np.dot(input, self.weights) + self.bias
+    print("Neuron input: ", input)
     return sigmoid(self.output)
 
   # Calculate derivative of each weight
@@ -32,28 +34,47 @@ class Neuron:
     # Derivative of loss with respect to the output of the network
     loss_d_output = -2(1 - output)
     
-
 class Layer:
   def __init__(self, size, inputLayer, parent):
-    self.neurons = [];
+    self.neurons = []
     self.size = size
-    for i in range(size):
-      self.neurons.append(Neuron(parent.layerOutputs[inputLayer]))
-  def feedforward(self):
-    for i in range (0, len(self.neurons)):
-      self.neurons[i].feedforward()
+    self.inputLayer = inputLayer
+    self.input = []
+    self.parent = parent
+    self.output = []
 
-class OurNeuralNetwork:
+    for i in range(self.size):
+      self.neurons.append(Neuron(self.parent.layerSizes[self.inputLayer]))
+
+  def getInput(self):
+    self.input.clear()
+    for i in range (0, self.parent.layerSizes[self.inputLayer]):
+      self.input.append(self.parent.layerOutputs[self.inputLayer])
+
+  def feedforward(self):
+    self.getInput()
+    self.output.clear()
+    for i in range (0, len(self.neurons)):
+      self.output.append(self.neurons[i].feedforward(self.input))
+    return self.output
+
+# Holds layers
+class NeuralNetwork:
   def __init__(self, input, layerSizes):
     self.layers = [input]
-    self.layerSizes = layerSizes
+    self.layerSizes = [len(input)] + layerSizes
     self.layerOutputs = [input]
-  
+    self.input = input
+
     for i in range (0, len(layerSizes)):
       self.layers.append(Layer(layerSizes[i], i, self))
-  def feedforward(self, x):
-    for i in range(0, len(self.layers)):
-      self.layers[i].feedforward()
 
-testNet = OurNeuralNetwork([-2, -1], [3, 1])
+  def feedforward(self):
+    self.layerOutputs.clear()
+    self.layerOutputs.append(self.input)
+    for i in range(1, len(self.layers)):
+      self.layerOutputs.append(self.layers[i].feedforward())
+
+testNet = NeuralNetwork([-2, -1], [2, 1])
 testNet.feedforward()
+print("output: ",testNet.layers[2].neurons[0].output)
