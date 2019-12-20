@@ -19,11 +19,15 @@ class Neuron:
     self.weights = []
     self.bias = np.random.normal()
 
-    for i in range (0, input.size):
+    for i in range (0, len(input)):
       self.weights.append(np.random.normal())
+
+  # Return dot product of inputs and weights
   def feedforward(self):
     self.output = np.dot(self.input, self.weights) + self.bias
     return sigmoid(self.output)
+
+  # Calculate derivative of each weight
   def backProp(self, loss, output):
     # Derivative of loss with respect to the output of the network
     loss_d_output = -2(1 - output)
