@@ -16,17 +16,16 @@ def mse_loss(y_true, y_pred):
 class Neuron:
   def __init__(self, inputSize):
     self.inputSize = inputSize
-    self.weights = []
+    self.weights = [0, 1]
     self.bias = 0 #np.random.normal()
 
 
-    for i in range (0, inputSize):
-      self.weights.append(1)#np.random.normal())
+    #for i in range (0, inputSize):
+      #self.weights.append(1)#np.random.normal())
 
   # Return dot product of inputs and weights
   def feedforward(self, input):
     self.output = np.dot(input, self.weights) + self.bias
-    print("Neuron input: ", input)
     return sigmoid(self.output)
 
   # Calculate derivative of each weight
@@ -48,14 +47,14 @@ class Layer:
 
   def getInput(self):
     self.input.clear()
-    for i in range (0, self.parent.layerSizes[self.inputLayer]):
-      self.input.append(self.parent.layerOutputs[self.inputLayer])
+    self.input = self.parent.layerOutputs[self.inputLayer]
 
   def feedforward(self):
     self.getInput()
     self.output.clear()
     for i in range (0, len(self.neurons)):
       self.output.append(self.neurons[i].feedforward(self.input))
+    print (self.output)
     return self.output
 
 # Holds layers
@@ -75,6 +74,6 @@ class NeuralNetwork:
     for i in range(1, len(self.layers)):
       self.layerOutputs.append(self.layers[i].feedforward())
 
-testNet = NeuralNetwork([-2, -1], [2, 1])
+testNet = NeuralNetwork([2, 3], [2, 1])
 testNet.feedforward()
-print("output: ",testNet.layers[2].neurons[0].output)
+print("output: ",testNet.layers[2].output)
