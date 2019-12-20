@@ -16,12 +16,12 @@ def mse_loss(y_true, y_pred):
 class Neuron:
   def __init__(self, inputSize):
     self.inputSize = inputSize
-    self.weights = [0, 1]
-    self.bias = 0 #np.random.normal()
+    self.weights = []
+    self.bias = np.random.normal()
 
 
-    #for i in range (0, inputSize):
-      #self.weights.append(1)#np.random.normal())
+    for i in range (0, inputSize):
+      self.weights.append(np.random.normal())
 
   # Return dot product of inputs and weights
   def feedforward(self, input):
@@ -30,6 +30,8 @@ class Neuron:
 
   # Calculate derivative of each weight
   def backProp(self, loss, output):
+    for i in range(0, len(self.weights)):
+      print("poopy")
     # Derivative of loss with respect to the output of the network
     loss_d_output = -2(1 - output)
     
