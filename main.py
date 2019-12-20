@@ -35,6 +35,8 @@ class Neuron:
     # Derivative of loss with respect to the output of the network
     loss_d_output = -2(1 - output)
     
+    #output_d_
+    
 class Layer:
   def __init__(self, size, inputLayer, parent):
     self.neurons = []
